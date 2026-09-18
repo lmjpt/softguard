@@ -1,0 +1,71 @@
+# 우리집 소프트가드 APK 를 클라우드에서 만들어 GitHub Release 에 올립니다.
+# main 에 푸시되면 자동으로 돌고, Actions 탭에서 손으로도 돌릴 수 있습니다.
+#
+# 결과물 주소는 항상 같습니다 (공기계에서 이 주소로 받아 설치):
+#   https://github.com/lmjpt/softguard/releases/latest/download/softguard.apk
+#
+# 서명 키는 secret 세 개에서 옵니다 (원본은 PC 의 android-signing.local 폴더):
+#   ANDROID_KEYSTORE_BASE64, ANDROID_KEYSTORE_PASSWORD, ANDROID_KEY_ALIAS
+name: Build SoftGuard APK
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: android
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: 17
+
+      # gradle wrapper(jar) 를 저장소에 넣지 않고 Actions 가 Gradle 을 직접 준비합니다.
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.11.1'
+
+      - name: 서명 키 준비
+        run: echo "$ANDROID_KEYSTORE_BASE64" | base64 -d > keystore.p12
+        env:
+          ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+
+      - name: 단위 테스트 (:core)
+        run: gradle :core:test --no-daemon
+
+      - name: APK 빌드
+        run: gradle :app:assembleRelease --no-daemon
+        env:
+          KEYSTORE_FILE: keystore.p12
+          KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+
+      - name: 테스트 리포트 보관 (실패 시)
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: core-test-report
+          path: core/build/reports/tests/test
+          if-no-files-found: ignore
+
+      - name: Release 에 올리기
+        run: |
+          cp app/build/outputs/apk/release/app-release.apk softguard.apk
+          gh release delete android-latest --yes --cleanup-tag || true
+          gh release create android-latest softguard.apk \
+            --title "우리집 소프트가드 (최신)" \
+            --notes "공기계에서 softguard.apk 를 내려받아 설치하세요. 설치 후 앱을 열어 안내대로 PIN → 접근성 → 배터리 → 차단 앱 → 시간대를 설정합니다." \
+            --latest
+        env:
+          GH_TOKEN: ${{ github.token }}

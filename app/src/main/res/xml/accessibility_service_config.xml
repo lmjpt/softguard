@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  전면 앱 감지 전용 설정.
+  - typeWindowStateChanged 만 구독 (설계문서 §5.3 이벤트 타입 한정)
+  - packageNames 를 비워 모든 앱을 받고, 코드에서 걸러낸다 (§8.2)
+  - canRetrieveWindowContent=false : 화면 내용은 읽지 않는다 (§8.9)
+  - notificationTimeout 150ms : 이벤트 병합
+-->
+<accessibility-service xmlns:android="http://schemas.android.com/apk/res/android"
+    android:accessibilityEventTypes="typeWindowStateChanged"
+    android:accessibilityFeedbackType="feedbackGeneric"
+    android:accessibilityFlags="flagDefault"
+    android:canRetrieveWindowContent="false"
+    android:description="@string/accessibility_description"
+    android:notificationTimeout="150"
+    android:summary="@string/accessibility_summary" />

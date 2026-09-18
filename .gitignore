@@ -1,0 +1,20 @@
+# Gradle / 빌드 산출물
+.gradle/
+build/
+*/build/
+.kotlin/
+local.properties
+
+# IDE
+.idea/
+*.iml
+.vscode/
+
+# 서명 키 — 절대 커밋하지 않는다. GitHub secret 으로만 전달한다.
+android-signing.local/
+keystore.p12
+*.jks
+
+# 로컬 백업·임시
+*.log
+*.tmp

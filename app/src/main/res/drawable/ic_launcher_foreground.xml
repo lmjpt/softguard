@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 방패 + 집 모양. 108dp 캔버스의 가운데 66dp 안에 그린다 (adaptive icon safe zone). -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M54,24 L78,33 L78,52 C78,66 68,77 54,84 C40,77 30,66 30,52 L30,33 Z" />
+    <path
+        android:fillColor="#2F5BEA"
+        android:pathData="M54,40 L66,51 L63,51 L63,64 L45,64 L45,51 L42,51 Z" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M51,56 L57,56 L57,64 L51,64 Z" />
+</vector>

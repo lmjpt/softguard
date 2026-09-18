@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">우리집 소프트가드</string>
+    <string name="accessibility_summary">차단 목록에 넣은 앱을 정해진 시간에만 열어 줍니다</string>
+    <string name="accessibility_description">어떤 앱이 화면에 올라오는지만 감지합니다. 차단 목록의 앱이 허용 시간 밖에 열리면 안내 화면으로 덮고, 앱 실행 이력(앱 이름·시각·차단 여부)을 이 기기 안에만 남깁니다. 화면 내용, 입력 내용, 메시지는 읽지 않습니다.</string>
+    <string name="notification_channel_status">제어 상태</string>
+</resources>
