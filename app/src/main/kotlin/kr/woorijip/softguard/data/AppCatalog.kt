@@ -46,7 +46,7 @@ class AppCatalog(private val context: Context) {
     private fun appsMap(): Map<String, AppInfo> {
         appsCache?.let { return it }
         val intent = Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_LAUNCHER)
-        val resolved = pm.queryIntentActivities(intent, PackageManager.ResolveInfoFlags.of(0))
+        val resolved = pm.queryIntentActivities(intent, PackageManager.ResolveInfoFlags.of(0L))
         val map = HashMap<String, AppInfo>()
         for (ri in resolved) {
             val ai = ri.activityInfo?.applicationInfo ?: continue
@@ -63,7 +63,7 @@ class AppCatalog(private val context: Context) {
     fun defaultLauncher(): String? {
         launcherCache?.let { return it }
         val home = Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_HOME)
-        val ri = pm.resolveActivity(home, PackageManager.ResolveInfoFlags.of(PackageManager.MATCH_DEFAULT_ONLY))
+        val ri = pm.resolveActivity(home, PackageManager.ResolveInfoFlags.of(PackageManager.MATCH_DEFAULT_ONLY.toLong()))
         val pkg = ri?.activityInfo?.packageName
         // 기본 홈이 아직 없으면 (android 이 돌아옴) 캐시하지 않는다
         if (pkg != null && pkg != "android") launcherCache = pkg
@@ -89,7 +89,7 @@ class AppCatalog(private val context: Context) {
 
     fun labelOf(pkg: String): String =
         appsMap()[pkg]?.label ?: try {
-            pm.getApplicationLabel(pm.getApplicationInfo(pkg, PackageManager.ApplicationInfoFlags.of(0))).toString()
+            pm.getApplicationLabel(pm.getApplicationInfo(pkg, PackageManager.ApplicationInfoFlags.of(0L))).toString()
         } catch (_: Exception) {
             pkg
         }
@@ -97,7 +97,7 @@ class AppCatalog(private val context: Context) {
     fun iconOf(pkg: String): Drawable? = try { pm.getApplicationIcon(pkg) } catch (_: Exception) { null }
 
     fun isInstalled(pkg: String): Boolean = try {
-        pm.getApplicationInfo(pkg, PackageManager.ApplicationInfoFlags.of(0)); true
+        pm.getApplicationInfo(pkg, PackageManager.ApplicationInfoFlags.of(0L)); true
     } catch (_: Exception) {
         false
     }
